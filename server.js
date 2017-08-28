@@ -1,4 +1,8 @@
 var http = require('http');
+var fs = require('fs');
+
+var scriptFile1 = JSON.parse(fs.readFileSync('file1.json', 'utf8'));
+var scriptFile2 = JSON.parse(fs.readFileSync('file1.json', 'utf8'));
 
 var handle = function(request, response) {
     console.log(request.url, "was requested");
