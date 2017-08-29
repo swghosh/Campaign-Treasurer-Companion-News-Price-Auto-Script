@@ -85,12 +85,12 @@ for(var index in scriptFileTwo) {
 }
 
 var updater = function(news, percentage, item) {
-    posters.postNews(script.news, (output) => { });
+    posters.postNews(news, (output) => { });
     setTimeout(() => {
-        posters.priceOf(script.item, (value) => {
-            var difference = (value * script.percentage) / 100;
+        posters.priceOf(item, (value) => {
+            var difference = (value * percentage) / 100;
             var newPrice = value + difference;
-            posters.updatePrice(script.item, newPrice, (output) => { });
+            posters.updatePrice(item, newPrice, (output) => { });
         });
     }, durationNewsAndPrice);
 };
