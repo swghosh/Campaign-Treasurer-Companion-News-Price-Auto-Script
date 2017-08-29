@@ -8,14 +8,21 @@ var scriptTwoSwitch = false;
 
 var durationNewsAndPrice = 20000;
 
-var scriptFileOne = JSON.parse(fs.readFileSync('file1.json', 'utf8'));
-var scriptFileTwo = JSON.parse(fs.readFileSync('file2.json', 'utf8'));
+var scriptFileOne = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file1.json', 'utf8'));
+var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file1.json', 'utf8'));
 
 var handle = function(request, response) {
     console.log(request.url, "was requested");
+    if(request.url == '/start1') {
 
+    }
+    else if(request.url == '/start2') {
+
+    }
+    else {
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end('Hello World');
+    }
 };
 
 http.createServer(handle).listen(8080);
@@ -31,11 +38,11 @@ for(var index in scriptFileOne) {
     scriptOne[index].percentage = script[2];
     scriptOne[index].item = script[3];
 
-    if(percentage.trim().endsWith('DOWN')) {
-        percentage = - parseFloat(percentage);
+    if(scriptOne[index].percentage.trim().endsWith('DOWN')) {
+        scriptOne[index].percentage = - parseFloat(scriptOne[index].percentage);
     }
     else {
-        percentage = parseFloat(percentage);
+        scriptOne[index].percentage = parseFloat(scriptOne[index].percentage);
     }
 
 
@@ -44,7 +51,7 @@ for(var index in scriptFileOne) {
 var scriptTwo = [];
 
 for(var index in scriptFileTwo) {
-    var script = scriptFileOne[index];
+    var script = scriptFileTwo[index];
 
     scriptTwo[index] = {};
     scriptTwo[index].news = script[0];
@@ -52,11 +59,11 @@ for(var index in scriptFileTwo) {
     scriptTwo[index].percentage = script[2];
     scriptTwo[index].item = script[3];
 
-    if(percentage.trim().endsWith('DOWN')) {
-        percentage = - parseFloat(percentage);
+    if(scriptTwo[index].percentage.trim().endsWith('DOWN')) {
+        scriptTwo[index].percentage = - parseFloat(scriptTwo[index].percentage);
     }
     else {
-        percentage = parseFloat(percentage);
+        percentage = parseFloat(scriptTwo[index].percentage);
     }
 }
 
