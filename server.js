@@ -14,18 +14,35 @@ var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurerco
 var handle = function(request, response) {
     console.log(request.url, "was requested");
     if(request.url == '/start1') {
-
+        for(var index in scriptOne) {
+           setTimeout(() => {
+            updater(scriptOne[index]);
+           }, scriptOne[index].timeId * 1000);
+        }
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.end('Script 1 started');
     }
     else if(request.url == '/start2') {
-
+        for(var index in scriptOne) {
+            setTimeout(() => {
+             updater(scriptOne[index]);
+            }, scriptOne[index].timeId * 1000);
+         }
+         response.writeHead(200, {'Content-Type': 'text/plain'});
+         response.end('Script 1 started');
+    }
+    else if(request.url == '/stop') {
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.end('Host is off now!');
+        server.close();
     }
     else {
         response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.end('Hello World');
+        response.end('Host is up and doing!');
     }
 };
 
-http.createServer(handle).listen(8080);
+var server = http.createServer(handle).listen(8080);
 
 var scriptOne = [];
 
