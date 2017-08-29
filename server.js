@@ -14,22 +14,24 @@ var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurerco
 var handle = function(request, response) {
     console.log(request.url, "was requested");
     if(request.url == '/start1') {
-        for(var index in scriptOne) {
+        var index = 0;
+        for(var i in scriptOne) {
            setTimeout(() => {
-                updater(scriptOne[index].news, scriptOne[index].percentage, scriptOne[index].item);
-           }, scriptOne[index].timeId * 60 * 1000);
+                updater(scriptOne[index].news, scriptOne[index].percentage, scriptOne[index++].item);
+           }, scriptOne[i].timeId * 60 * 1000);
         }
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end('Script 1 started');
     }
     else if(request.url == '/start2') {
-        for(var index in scriptTwo) {
-            setTimeout(() => {
-                updater(scriptTwo[index].news, scriptTwo[index].percentage, scriptTwo[index].item);
-            }, scriptTwo[index].timeId * 60 * 1000);
-         }
-         response.writeHead(200, {'Content-Type': 'text/plain'});
-         response.end('Script 1 started');
+        var index = 0;
+        for(var i in scriptTwo) {
+           setTimeout(() => {
+                updater(scriptTwo[index].news, scriptTwo[index].percentage, scriptTwo[index++].item);
+           }, scriptTwo[i].timeId * 60 * 1000);
+        }
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.end('Script 2 started');
     }
     else if(request.url == '/stop') {
         response.writeHead(200, {'Content-Type': 'text/plain'});
