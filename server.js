@@ -14,29 +14,35 @@ var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurerco
 var handle = function(request, response) {
     console.log(request.url, "was requested");
     if(request.url == '/start1') {
+        scriptOneSwitch = true;
         var index = 0;
         for(var i in scriptOne) {
            setTimeout(() => {
+               if(scriptOneSwitch) {
                 updater(scriptOne[index].news, scriptOne[index].percentage, scriptOne[index++].item);
+               }
            }, scriptOne[i].timeId * 60 * 1000);
         }
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end('Script 1 started');
     }
     else if(request.url == '/start2') {
+        scriptTwoSwitch = true;
         var index = 0;
         for(var i in scriptTwo) {
            setTimeout(() => {
-                updater(scriptTwo[index].news, scriptTwo[index].percentage, scriptTwo[index++].item);
+                if(scriptTwoSwitch) {
+                    updater(scriptTwo[index].news, scriptTwo[index].percentage, scriptTwo[index++].item);
+                }
            }, scriptTwo[i].timeId * 60 * 1000);
         }
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end('Script 2 started');
     }
     else if(request.url == '/stop') {
+        scriptOneSwitch = scriptTwoSwitch = false;
         response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.end('Host is off now!');
-        server.close();
+        response.end('All scripts are off now!');
     }
     else {
         response.writeHead(200, {'Content-Type': 'text/plain'});
