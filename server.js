@@ -8,8 +8,8 @@ var scriptTwoSwitch = false;
 
 var durationNewsAndPrice = 20000;
 
-var scriptFileOne = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file1.json', 'utf8'));
-var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file2.json', 'utf8'));
+var scriptFileOne = JSON.parse(fs.readFileSync('file1.json', 'utf8'));
+var scriptFileTwo = JSON.parse(fs.readFileSync('file2.json', 'utf8'));
 
 var handle = function(request, response) {
     console.log(request.url, "was requested");
@@ -20,10 +20,12 @@ var handle = function(request, response) {
 
 http.createServer(handle).listen(8080);
 
-var scriptOne = {};
+var scriptOne = [];
 
 for(var index in scriptFileOne) {
     var script = scriptFileOne[index];
+
+    scriptOne[index] = {};
     scriptOne[index].news = script[0];
     scriptOne[index].timeId = script[1];
     scriptOne[index].percentage = script[2];
@@ -39,10 +41,12 @@ for(var index in scriptFileOne) {
 
 }
 
-var scriptTwo = {};
+var scriptTwo = [];
 
 for(var index in scriptFileTwo) {
     var script = scriptFileOne[index];
+
+    scriptTwo[index] = {};
     scriptTwo[index].news = script[0];
     scriptTwo[index].timeId = script[1];
     scriptTwo[index].percentage = script[2];
