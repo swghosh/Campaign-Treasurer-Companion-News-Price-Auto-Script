@@ -20,6 +20,9 @@ var handle = function(request, response) {
            setTimeout(() => {
                if(scriptOneSwitch) {
                 updater(scriptOne[index].news, scriptOne[index].percentage, scriptOne[index++].item);
+                if(index == scriptOne.length) {
+                    scriptOneSwitch = false;
+                }
                }
            }, scriptOne[i].timeId * 60 * 1000);
         }
@@ -33,6 +36,9 @@ var handle = function(request, response) {
            setTimeout(() => {
                 if(scriptTwoSwitch) {
                     updater(scriptTwo[index].news, scriptTwo[index].percentage, scriptTwo[index++].item);
+                    if(index == scriptTwo.length) {
+                        scriptTwoSwitch = false;
+                    }
                 }
            }, scriptTwo[i].timeId * 60 * 1000);
         }
@@ -46,7 +52,7 @@ var handle = function(request, response) {
     }
     else {
         response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.end('Host is up and doing!');
+        response.end('Host is up and doing!\n' + 'script one running: ' + scriptOneSwitch + '\nscript two running: ' + scriptTwoSwitch);
     }
 };
 
