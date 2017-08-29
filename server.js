@@ -9,24 +9,24 @@ var scriptTwoSwitch = false;
 var durationNewsAndPrice = 20000;
 
 var scriptFileOne = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file1.json', 'utf8'));
-var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file1.json', 'utf8'));
+var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file2.json', 'utf8'));
 
 var handle = function(request, response) {
     console.log(request.url, "was requested");
     if(request.url == '/start1') {
         for(var index in scriptOne) {
            setTimeout(() => {
-            updater(scriptOne[index]);
-           }, scriptOne[index].timeId * 1000);
+                updater(scriptOne[index].news, scriptOne[index].percentage, scriptOne[index].item);
+           }, scriptOne[index].timeId * 60 * 1000);
         }
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end('Script 1 started');
     }
     else if(request.url == '/start2') {
-        for(var index in scriptOne) {
+        for(var index in scriptTwo) {
             setTimeout(() => {
-             updater(scriptOne[index]);
-            }, scriptOne[index].timeId * 1000);
+                updater(scriptTwo[index].news, scriptTwo[index].percentage, scriptTwo[index].item);
+            }, scriptTwo[index].timeId * 60 * 1000);
          }
          response.writeHead(200, {'Content-Type': 'text/plain'});
          response.end('Script 1 started');
@@ -84,7 +84,7 @@ for(var index in scriptFileTwo) {
     }
 }
 
-var updater = function(script) {
+var updater = function(news, percentage, item) {
     posters.postNews(script.news, (output) => { });
     setTimeout(() => {
         posters.priceOf(script.item, (value) => {
