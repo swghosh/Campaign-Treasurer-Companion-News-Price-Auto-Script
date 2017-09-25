@@ -12,7 +12,7 @@ var scriptOneSwitch = false;
 var scriptTwoSwitch = false;
 
 // set the duration between a news update and a price update
-const durationNewsAndPrice = 20000;
+const durationNewsAndPrice = 60000;
 
 // read json files with news, price update content as a JSON object
 var scriptFileOne = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file1.json', 'utf8'));
