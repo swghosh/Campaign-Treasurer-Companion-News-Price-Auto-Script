@@ -15,8 +15,8 @@ var scriptTwoSwitch = false;
 const durationNewsAndPrice = 60000;
 
 // read json files with news, price update content as a JSON object
-var scriptFileOne = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file1.json', 'utf8'));
-var scriptFileTwo = JSON.parse(fs.readFileSync('/home/ubuntu/campaigntreasurercompanionnewsscript/file2.json', 'utf8'));
+var scriptFileOne = JSON.parse(fs.readFileSync('./file1.json', 'utf8'));
+var scriptFileTwo = JSON.parse(fs.readFileSync('./file2.json', 'utf8'));
 
 // function to handle requests, process tasks and generate appropriate responses
 var handle = function(request, response) {
@@ -89,6 +89,9 @@ var handle = function(request, response) {
     }
 
 };
+
+// specify port where web server is to be runt
+const port = process.env.PORT || 3000;
 
 // create the web server and make it listen to port 8080
 var server = http.createServer(handle).listen(8080);
