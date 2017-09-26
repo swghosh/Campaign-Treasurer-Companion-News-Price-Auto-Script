@@ -94,7 +94,7 @@ var handle = function(request, response) {
 const port = process.env.PORT || 3000;
 
 // create the web server and make it listen to port 8080
-var server = http.createServer(handle).listen(8080);
+var server = http.createServer(handle).listen(port);
 
 // initialise empty arrays for holding objects of auto update scripts
 var scriptOne = [];
