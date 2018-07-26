@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Campaign Treasurer Companion | Control Unit - Automatic Time Based Updates</title>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="base.css" type="text/css" />
+        <link rel="stylesheet" href="switch.css" type="text/css" />
+        <meta name="theme-color" content="#326e82">
+        <meta name="author" content="SwG Ghosh">
+    </head>
+    <body>
+        <div class="bars">
+            <div class="topbar">
+                <h1>
+                    Campaign Treasurer Companion
+                </h1>
+                <small class="time">
+                    Automatic Time Based Updates - Control Unit
+                </small>
+            </div>
+        </div>
+        <div id="data">
+            <table class="view">
+                <tr class="sector">
+                    <td class="sector" colspan="3">
+                        Status
+                    </td>
+                </tr>
+                <tr class="stock">
+                    <td class="name">Update Script One</td>
+                    <td class="percentage high" id="scriptA">● Running</td>
+                    <td class="current">"scriptA"</td>
+                </tr>
+                <tr class="stock">
+                    <td class="name">Update Script Two</td>
+                    <td class="percentage low" id="scriptB">● Not Running</td>
+                    <td class="current">"scriptB"</td>
+                </tr>
+
+                <tr class="sector">
+                    <td class="sector" colspan="3">
+                        Switches
+                    </td>
+                </tr>
+                <tr class="stock">
+                    <td class="name" colspan="2">Update Script One</td>
+                    <td class="current">
+                        <div class="switch on" id="scriptA">
+                            <div class="inner on"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="stock">
+                    <td class="name" colspan="2">Update Script Two</td>
+                    <td class="current">
+                        <div class="switch off" id="scriptB">
+                            <div class="inner off"></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="loader">
+            <img src="loading.gif" class="loader">
+        </div>
+    </body>
+    <script src="switch.js"></script>
+</html>

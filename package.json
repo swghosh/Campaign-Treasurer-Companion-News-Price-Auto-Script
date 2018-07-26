@@ -1,12 +1,11 @@
 {
-  "name": "Campaign-Treasurer-Companion-News-Script",
-  "version": "0.9.0",
-  "private": true,
+  "name": "campaign-treasurer-companion-news-script",
+  "version": "2.0.0",
+  "description": "Control Unit. Automated news and price script based on preset scenario for Campaign Treasurer Application. Automatically runs multiple news post requests to the application upon web server trigger.",
+  "main": "app.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node app.js"
   },
-  "description": "Automated news script based on preset scenario for Campaign Treasurer Application. Automatically runs multiple news post requests to the application upon web server trigger.",
-  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/swghosh/Campaign-Treasurer-Companion-News-Price-Auto-Script.git"
