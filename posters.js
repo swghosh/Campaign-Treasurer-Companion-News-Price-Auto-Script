@@ -25,6 +25,22 @@ var descriptor = {
     }
 }
 
+exports.differenceNewsAndPriceUpdate = 60000
+
+// function to chain update (postNews, wait for difference time, get priceOf, then updatePrice)
+exports.chainUpdate = function(updateItem, callback) {
+    exports.postNews(updateItem.news, () => {
+        setTimeout(() => {
+            exports.priceOf(updateItem.item, (price) => {
+                var updatedPrice = price + (price * updateItem.percentage)
+                exports.updatePrice(updateItem.item, updatedPrice, () => {
+                    callback()
+                })
+            })
+        }, exports.differenceNewsAndPriceUpdate)
+    })
+}
+
 // function to post news content and run a callback
 exports.postNews = function(content, callback) {
 
