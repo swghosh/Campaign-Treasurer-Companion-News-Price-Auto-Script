@@ -3,11 +3,11 @@ var events = require('events')
 
 var posters = require('./posters')
 
-const unitTime = 1000
+const unitTime = 1000   // unit time in ms
 
 class ScriptsControl {
     constructor(scriptsList) {
-        assert.equal(scriptsList instanceof Object, true, 'invalid scriptsList')
+        assert.equal(scriptsList instanceof Object, true, 'invalid scripts list')
 
         this.scriptsList = scriptsList
         this.scriptNames = Object.keys(scriptsList)
@@ -93,6 +93,7 @@ class ScriptRun {
         this.masterSwitch = true
 
         var runningIndex = 0
+        var previousTimeId = 0
         var self = this
 
         var repeatRecurse = function() {
@@ -101,11 +102,12 @@ class ScriptRun {
             if(self.masterSwitch) {
                 if(runningIndex < self.script.length) {
                     setTimeout(() => {
-                        console.log(currentScriptItem)
+                        posters.chainUpdate(currentScriptItem, () => {})
 
                         repeatRecurse()
-                    }, currentScriptItem.timeId * unitTime)
+                    }, (currentScriptItem.timeId - previousTimeId) * unitTime)
 
+                    previousTimeId = currentScriptItem.timeId
                     runningIndex++
                 }
                 else {
