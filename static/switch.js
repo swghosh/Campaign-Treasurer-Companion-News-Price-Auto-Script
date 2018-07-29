@@ -1,17 +1,3 @@
-var divSwitches = document.querySelectorAll('div.switch')
-
-divSwitches.forEach(function(divSwitch) {
-    divSwitch.onclick = function() {
-        var state = (this.className == 'switch on')
-
-        this.className = (this.className == 'switch on') ? 'switch off' : 'switch on'
-        this.childNodes[1].className = (this.childNodes[1].className == 'inner on') ? 'inner off': 'inner on'
-
-        loaderToggle()
-        performTask(this.id, !state)
-    }
-})
-
 var loader = document.querySelector('div.loader')
 function loaderToggle() {
     loader.classList.toggle('off')
@@ -19,31 +5,6 @@ function loaderToggle() {
 
 var status = {}
 var dataDiv = document.querySelector('div#data')
-var tableView = `<table class="view">
-
-<tr class="sector">
-    <td class="sector" colspan="3">
-        Switches
-    </td>
-</tr>
-<tr class="stock">
-    <td class="name" colspan="2">Update Script One</td>
-    <td class="current">
-        <div class="switch on" id="scriptA">
-            <div class="inner on"></div>
-        </div>
-    </td>
-</tr>
-<tr class="stock">
-    <td class="name" colspan="2">Update Script Two</td>
-    <td class="current">
-        <div class="switch off" id="scriptB">
-            <div class="inner off"></div>
-        </div>
-    </td>
-</tr>
-</table>`
-tableView = document.querySelector('table.view')
 
 window.addEventListener('load', function() {
     var statusRequest = new XMLHttpRequest()
@@ -89,6 +50,7 @@ var loadTables = function(scriptStatus) {
         var tdStatus = document.createElement('td')
         var state = (scriptStatus[scriptName] == 'running')
         tdStatus.className = 'percentage ' + ((state) ? 'high' : 'low')
+        tdStatus.id = scriptName
         tdStatus.innerHTML = (state) ? '● Running' : '● Not Running'
         var tdShortName = document.createElement('td')
         tdShortName.className = 'current'
@@ -139,6 +101,8 @@ var loadTables = function(scriptStatus) {
     })
 
     dataDiv.innerHTML = table.outerHTML
+
+    initialiseSwitches()
 }
 
 var performTask = function(id, state) {
@@ -153,4 +117,20 @@ var onError = function(errorMessage) {
     alert(errorMessage)
     // will reload the page
     window.location = window.location.href
+}
+
+var initialiseSwitches = function() {
+    var divSwitches = document.querySelectorAll('div.switch')
+
+    divSwitches.forEach(function(divSwitch) {
+        divSwitch.onclick = function() {
+            var state = (this.className == 'switch on')
+    
+            this.className = (this.className == 'switch on') ? 'switch off' : 'switch on'
+            this.childNodes[0].className = (this.childNodes[0].className == 'inner on') ? 'inner off': 'inner on'
+    
+            loaderToggle()
+            performTask(this.id, !state)
+        }
+    })
 }
