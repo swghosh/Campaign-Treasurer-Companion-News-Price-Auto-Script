@@ -2,6 +2,7 @@ var assert = require('assert')
 var events = require('events')
 
 var posters = require('./posters')
+posters.differenceNewsAndPriceUpdate = 500
 
 const unitTime = 1000   // unit time in ms
 

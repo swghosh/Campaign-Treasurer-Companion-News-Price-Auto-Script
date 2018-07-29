@@ -18,7 +18,10 @@ var url = require('url')
 var fs = require('fs')
 var path = require('path')
 
+var runner = require('./runner')
+
 var scriptsList = {}
+let controller = null
 
 var downloadJson = (callback) => {
     http.get(jsonLink, (res) => {
@@ -56,6 +59,8 @@ var startWebServer = () => {
     downloadJson((downloadedObject) => {
         scriptsList = downloadedObject
 
+        controller = new runner.ScriptsControl(scriptsList)
+
         webServer.listen(httpPort)
         console.log(`[${new Date().toString()}] Web Server started at port ${httpPort}`)
     })
@@ -75,6 +80,51 @@ var produceResponse = (pathname, body, res) => {
             'Content-Type': mimeTypes['.json'] + '; charset=utf8'
         })
         res.end(JSON.stringify(scriptsList))
+    }
+    else if(pathname == '/startScript') {
+        try {
+            // instruction object (JSON as POST data)
+            // 
+            // {
+            //     "start": true | false,
+            //     "scriptName": "nameOfTheScript"
+            // }
+            
+            var instruction = JSON.parse(body)
+            
+            controller.startScript((instruction.start) ? instruction.scriptName : undefined)
+
+            var status = controller.status()
+            status.started = instruction.scriptName
+
+            res.writeHead(200, {
+                'Content-Type': mimeTypes['.json'] + '; charset=utf8'
+            })
+            res.end(JSON.stringify(status))
+        }
+        catch(err) {
+            var status = controller.status()
+            status.notStarted = ''
+
+            res.writeHead(200, {
+                'Content-Type': mimeTypes['.json'] + '; charset=utf8'
+            })
+            res.end(JSON.stringify(status))
+        }
+    }
+    else if(pathname == '/stopCurrentlyRunningScript') {
+        controller.stopCurrentlyRunningScript()
+
+        res.writeHead(200, {
+            'Content-Type': mimeTypes['.json'] + '; charset=utf8'
+        })
+        res.end(JSON.stringify(controller.status()))
+    }
+    else if(pathname == '/status') {
+        res.writeHead(200, {
+            'Content-Type': mimeTypes['.json'] + '; charset=utf8'
+        })
+        res.end(JSON.stringify(controller.status()))
     }
     else {
         var fileStream = fs.createReadStream(path.join('static', pathname)).on('error', (err) => {
