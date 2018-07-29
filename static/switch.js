@@ -107,8 +107,16 @@ var loadTables = function(scriptStatus) {
 
 var performTask = function(id, state) {
 
-    var finalAction = function() {
+    var finalActionStarted = function(response) {
+        response = JSON.parse(response)
+        if(response.started == undefined) {
+            onError('Could not start the update script.')
+        }
         setTimeout(loaderToggle, 1000)
+    }
+
+    var finalActionStopped = function() {
+        setTimeout(loaderToggle, 1000)        
     }
 
     var statusTd = document.querySelector('td.percentage#' + id)
@@ -121,7 +129,7 @@ var performTask = function(id, state) {
         startRequest.open('POST', '/startScript')
         startRequest.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200) {
-                finalAction(this.responseText)
+                finalActionStarted(this.responseText)
             }
             else if(this.readyState == 4) {
                 onError('An error occured. (possibly network issue)')
@@ -139,7 +147,7 @@ var performTask = function(id, state) {
         stopRequest.open('GET', '/stopCurrentlyRunningScript')
         stopRequest.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200) {
-                finalAction(this.responseText)
+                finalActionStopped()
             }
             else if(this.readyState == 4) {
                 onError('An error occured. (possibly network issue)')
