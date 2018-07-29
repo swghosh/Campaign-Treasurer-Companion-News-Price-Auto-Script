@@ -1,7 +1,11 @@
 var assert = require('assert')
 var events = require('events')
 
-class Runner {
+var posters = require('./posters')
+
+const unitTime = 1000
+
+class ScriptsControl {
     constructor(scriptsList) {
         assert.equal(scriptsList instanceof Object, true, 'invalid scriptsList')
 
@@ -15,11 +19,13 @@ class Runner {
 
     startScript(scriptName) {
         assert.notStrictEqual(this.scriptsList[scriptName], undefined, 'invalid script name')
+        assert.strictEqual(this.currentScriptRun, null, 'there is already a script running, cannot start another unless it stops')
 
         this.currentScriptRun = new ScriptRun(scriptName, this.scriptsList[scriptName])
         this.currentScriptRun._runner = this
 
         this.currentScriptRun.start()
+        this.running = true
         this.runningScriptName = scriptName
     }
 
@@ -31,7 +37,7 @@ class Runner {
         this.runningScriptName = ''
     }
 
-    runningScriptEnd() {
+    runningScriptFinished() {
         this.running = false
         this.currentScriptRun = null
         this.runningScriptName = ''
@@ -55,18 +61,71 @@ class ScriptRun {
         assert.equal(typeof scriptName, 'string', 'invalid script name')
         assert.equal(script instanceof Array, true, 'invalid script')
 
-        this.scriptName(scriptName)
+        this.scriptName = scriptName
         this.script = script
         this._runner = null
 
-        this.tracker = new events.EventEmitter()
+        this.jobs = new events.EventEmitter()
+        this.eventsInit()
+
+        this.masterSwitch = false
     }
+
+    eventsInit() {
+        this.jobs.on('finish', () => {
+            if(this._runner != null) {
+                this._runner.runningScriptFinished()
+            }
+        })
+        this.jobs.on('error', (err) => {
+            console.error(err)
+
+            if(this._runner != null) {
+                this._runner.runningScriptFinished()
+            }
+        })
+        this.jobs.on('stop', () => {
+
+        })
+    }
+
     start() {
+        this.masterSwitch = true
 
+        var runningIndex = 0
+        var self = this
+
+        var repeatRecurse = function() {
+            var currentScriptItem = self.script[runningIndex]
+            
+            if(self.masterSwitch) {
+                if(runningIndex < self.script.length) {
+                    setTimeout(() => {
+                        console.log(currentScriptItem)
+
+                        repeatRecurse()
+                    }, currentScriptItem.timeId * unitTime)
+
+                    runningIndex++
+                }
+                else {
+                    self.jobs.emit('finish')
+                }
+            }
+            else {
+                self.jobs.emit('stop')
+            }
+        }
+
+        repeatRecurse()
     }
-    stop() {
 
+    stop() {
+        this.masterSwitch = false
     }
 }
 
-module.exports = Runner;
+module.exports = {
+    ScriptsControl: ScriptsControl,
+    ScriptRun: ScriptRun
+}
