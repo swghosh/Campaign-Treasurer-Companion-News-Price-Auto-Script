@@ -106,11 +106,33 @@ var loadTables = function(scriptStatus) {
 }
 
 var performTask = function(id, state) {
+
+    var finalAction = function() {
+        setTimeout(loaderToggle, 1000)
+    }
+
     var statusTd = document.querySelector('td.percentage#' + id)
     statusTd.innerHTML = (state) ? '● Running' : '● Not Running'
     statusTd.className = (state) ? 'percentage high' : 'percentage low'
 
-    setTimeout(loaderToggle, 1500)
+    if(state) {
+        // perform startScript
+        finalAction() // demo
+    }
+    else {
+        // perform stopCurrentlyRunningScript
+        var stopRequest = new XMLHttpRequest()
+        stopRequest.open('GET', '/stopCurrentlyRunningScript')
+        stopRequest.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+                finalAction()
+            }
+            else if(this.readyState == 4) {
+                onError('An error occured. (possibly network issue)')
+            }
+        }
+        stopRequest.send()
+    }
 }
 
 var onError = function(errorMessage) {

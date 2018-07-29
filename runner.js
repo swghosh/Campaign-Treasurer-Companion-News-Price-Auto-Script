@@ -31,7 +31,9 @@ class ScriptsControl {
     }
 
     stopCurrentlyRunningScript() {
-        this.currentScriptRun.stop()
+        if(this.currentScriptRun != null) {
+            this.currentScriptRun.stop()
+        }
 
         this.running = false
         this.currentScriptRun = null
