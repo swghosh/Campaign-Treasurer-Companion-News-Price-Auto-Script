@@ -117,7 +117,21 @@ var performTask = function(id, state) {
 
     if(state) {
         // perform startScript
-        finalAction() // demo
+        var startRequest = new XMLHttpRequest()
+        startRequest.open('POST', '/startScript')
+        startRequest.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+                finalAction(this.responseText)
+            }
+            else if(this.readyState == 4) {
+                onError('An error occured. (possibly network issue)')
+            }
+        }
+        var instruction = {
+            scriptName: id,
+            start: true
+        }
+        startRequest.send(JSON.stringify(instruction))
     }
     else {
         // perform stopCurrentlyRunningScript
@@ -125,7 +139,7 @@ var performTask = function(id, state) {
         stopRequest.open('GET', '/stopCurrentlyRunningScript')
         stopRequest.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200) {
-                finalAction()
+                finalAction(this.responseText)
             }
             else if(this.readyState == 4) {
                 onError('An error occured. (possibly network issue)')
