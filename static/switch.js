@@ -101,6 +101,12 @@ var loadTables = function(scriptStatus) {
         table.appendChild(trSwitch)
     })
 
+    var footerMessageHtml = '<td colspan="4" class="sector copyright"><b>Please do not use this unit without the authorisation/permission of the market administrator/stock exchange board.</b><br><br>© Campaign Treasurer.<br>Designed and Developed by <a href="https://github.com/swghosh" class="author">Swarup Ghosh</a>.</td>'
+    var trFooter = document.createElement('tr')
+    trFooter.className = 'sector'
+    trFooter.innerHTML = footerMessageHtml
+    table.appendChild(trFooter)
+
     dataDiv.innerHTML = table.outerHTML
 
     initialiseSwitches()
