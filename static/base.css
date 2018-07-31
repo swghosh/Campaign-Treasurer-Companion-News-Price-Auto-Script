@@ -215,6 +215,9 @@ table.view td.high {
 table.view td.low {
     color: red;
 }
+table.view td.neutral {
+    color: orange;
+}
 table.view td.profile {
     margin: 0;
     padding: 5%;

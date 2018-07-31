@@ -48,10 +48,11 @@ var loadTables = function(scriptStatus) {
         tdFullName.className = 'name'
         tdFullName.innerHTML = 'Update Script ' + (index + 1)
         var tdStatus = document.createElement('td')
-        var state = (scriptStatus[scriptName] == 'running')
-        tdStatus.className = 'percentage ' + ((state) ? 'high' : 'low')
+        var runningState = (scriptStatus[scriptName] == 'running')
+        var finishedState = (scriptStatus[scriptName] == 'finished')
+        tdStatus.className = 'percentage ' + ((runningState) ? 'high' : ((finishedState) ? 'neutral' : 'low'))
         tdStatus.id = scriptName
-        tdStatus.innerHTML = (state) ? '● Running' : '● Not Running'
+        tdStatus.innerHTML = (runningState) ? '● Running' : ((finishedState) ? '● Finished' : '● Not Running')
         var tdShortName = document.createElement('td')
         tdShortName.className = 'current'
         tdShortName.innerHTML = '"' + scriptName + '"'
