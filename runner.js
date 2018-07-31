@@ -14,7 +14,9 @@ class ScriptsControl {
         this.scriptNames = Object.keys(scriptsList)
         
         this.running = false
+        this.finished = false
         this.runningScriptName = ''
+        this.lastRuntScriptName = ''
         this.currentScriptRun = null
     }
 
@@ -23,10 +25,11 @@ class ScriptsControl {
         assert.strictEqual(this.currentScriptRun, null, 'there is already a script running, cannot start another unless it stops')
 
         this.currentScriptRun = new ScriptRun(scriptName, this.scriptsList[scriptName])
-        this.currentScriptRun._runner = this
+        this.currentScriptRun.assignScriptsControl(this)
 
         this.currentScriptRun.start()
         this.running = true
+        this.finished = false
         this.runningScriptName = scriptName
     }
 
@@ -37,12 +40,17 @@ class ScriptsControl {
 
         this.running = false
         this.currentScriptRun = null
+
+        this.lastRuntScriptName = this.runningScriptName
         this.runningScriptName = ''
     }
 
     runningScriptFinished() {
         this.running = false
+        this.finished = true
         this.currentScriptRun = null
+
+        this.lastRuntScriptName = this.runningScriptName
         this.runningScriptName = ''
     }
 
@@ -50,10 +58,11 @@ class ScriptsControl {
         return this.scriptNames.map((scriptName) => {
             return {
                 name: scriptName,
-                running: (this.running) ? ((this.runningScriptName == scriptName) ? true : false) : false
+                running: (this.running) ? ((this.runningScriptName == scriptName) ? true : false) : false,
+                finished: (this.finished) ? ((this.lastRuntScriptName == scriptName) ? true : false) : false
             }
         }).reduce((previousItem, currentItem) => {
-            previousItem[currentItem.name] = currentItem.running ? "running" : "not running"
+            previousItem[currentItem.name] = currentItem.running ? "running" : (currentItem.finished ? "finished" : "not running")
             return previousItem
         }, {})
     }
@@ -71,16 +80,31 @@ class ScriptRun {
         this.jobs = new events.EventEmitter()
         this.eventsInit()
 
+        this.progressPercentage = 0
+
         this.masterSwitch = false
     }
 
+    assignScriptsControl(runner) {
+        this._runner = runner
+    }
+
+    updateProgress(runningIndex) {
+        this.progressPercentage = (runningIndex / this.script.length) * 100
+    }
+
     eventsInit() {
+        this.jobs.on('start', () => {
+            console.log(`[${new Date().toString()}] started ${this.scriptName}.`)
+        })
         this.jobs.on('finish', () => {
+            console.log(`[${new Date().toString()}] finished with ${this.scriptName}.`)
             if(this._runner != null) {
                 this._runner.runningScriptFinished()
             }
         })
         this.jobs.on('error', (err) => {
+            console.log(`[${new Date().toString()}] error occured at ${this.scriptName}.`)
             console.error(err)
 
             if(this._runner != null) {
@@ -88,7 +112,7 @@ class ScriptRun {
             }
         })
         this.jobs.on('stop', () => {
-
+            console.log(`[${new Date().toString()}] stopped ${this.scriptName}, ${this.progressPercentage}% rolled.`)            
         })
     }
 
@@ -100,6 +124,8 @@ class ScriptRun {
         var self = this
 
         var repeatRecurse = function() {
+            self.updateProgress(runningIndex)
+
             var currentScriptItem = self.script[runningIndex]
             
             if(self.masterSwitch) {
@@ -122,6 +148,7 @@ class ScriptRun {
             }
         }
 
+        this.jobs.emit('start')
         repeatRecurse()
     }
 

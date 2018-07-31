@@ -32,7 +32,7 @@ exports.chainUpdate = function(updateItem, callback) {
     exports.postNews(updateItem.news, () => {
         setTimeout(() => {
             exports.priceOf(updateItem.item, (price) => {
-                var updatedPrice = price + (price * updateItem.percentage * 0.01)
+                var updatedPrice = parseFloat((price + (price * updateItem.percentage * 0.01)).toFixed(2))
                 exports.updatePrice(updateItem.item, updatedPrice, () => {
                     callback()
                 })
