@@ -1,3 +1,8 @@
 service: atbucu
 runtime: nodejs8
 env: standard
+
+env_variables:
+  SCRIPTS_LIST_LINK: 'http://storage.googleapis.com/campaign-treasurer-companion.appspot.com/newsscripts17.json'
+  ACCESS_USERNAME: 'campaign-treasurer-companion@appspot.com'
+  ACCESS_PASSWORD: 'mildnetwork2k16'

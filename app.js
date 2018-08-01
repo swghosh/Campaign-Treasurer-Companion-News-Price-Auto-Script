@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 const httpPort = process.env.PORT || 8080
-const jsonLink = 'http://storage.googleapis.com/campaign-treasurer-companion.appspot.com/newsscripts17.json'
+const jsonLink = process.env.SCRIPTS_LIST_LINK
+const accessUsername = process.env.ACCESS_USERNAME
+const accessPassword = process.env.ACCESS_PASSWORD
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -19,6 +21,7 @@ var fs = require('fs')
 var path = require('path')
 
 var runner = require('./runner')
+var authy = require('./basicauthy')
 
 var scriptsList = {}
 let controller = null
@@ -52,7 +55,9 @@ var startWebServer = () => {
             body += chunk
         })
         req.on('end', () => {
-            produceResponse(parsedUrl.pathname, body, res)
+            authy.makeAuthy(accessUsername, accessPassword, 'This is a protected unit. Unathorised access is not allowed, please use valid credentials.', 'Protected unit', req, res, (req, res) => {
+                produceResponse(parsedUrl.pathname, body, res)
+            })
         })
     })
 
@@ -66,8 +71,6 @@ var startWebServer = () => {
     })
 }
 
-startWebServer()
-
 var produceResponse = (pathname, body, res) => {
     if(pathname == '/') {
         res.writeHead(200, {
@@ -79,7 +82,8 @@ var produceResponse = (pathname, body, res) => {
         res.writeHead(200, {
             'Content-Type': mimeTypes['.json'] + '; charset=utf8'
         })
-        res.end(JSON.stringify(scriptsList))
+        // pretty JSON for increased readability
+        res.end(JSON.stringify(scriptsList, undefined, 4))
     }
     else if(pathname == '/startScript') {
         try {
@@ -146,3 +150,5 @@ var fourZeroFour = (res) => {
     })
     res.end('This is not the resource that you are looking for. It seems like a four zero four error occured.')
 }
+
+startWebServer()
