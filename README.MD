@@ -1,4 +1,4 @@
-# Campaign-Treasurer-Companion-News-Price-Auto-Script
+# Campaign Treasurer Companion (Automatic Time Based Updates Service, Control Unit)
 
 ![web app screenshot](https://i.imgur.com/MMAECu4.jpg)
 
