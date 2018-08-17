@@ -10,9 +10,9 @@ const hostname = process.env.CTC_UPDATER_HOST || 'localhost';
 const authorisationToken = process.env.CTC_ADMIN_TOKEN || 'someuser:somepassword';
 
 // paths to use URL(s) in HTTP requests
-const pathForNewsUpdate = '/addnews';
-const pathForPriceOf = '/getprice';
-const pathForPriceUpdate = '/updateprice';
+const pathForNewsUpdate = '/updater/addnews.php';
+const pathForPriceOf = '/updater/getprice.php';
+const pathForPriceUpdate = '/updater/updateprice.php';
 
 var descriptor = {
     hostname: hostname,
