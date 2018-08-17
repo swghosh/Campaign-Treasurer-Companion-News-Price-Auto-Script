@@ -2,9 +2,9 @@ var assert = require('assert')
 var events = require('events')
 
 var posters = require('./posters')
-posters.differenceNewsAndPriceUpdate = 500
+posters.differenceNewsAndPriceUpdate = parseInt(process.env.CTC_DIFF_NEWS_PRICE)
 
-const unitTime = 1000   // unit time in ms
+const unitTime = parseInt(process.env.CTC_UNIT_TIME)   // unit time in ms
 
 class ScriptsControl {
     constructor(scriptsList) {
