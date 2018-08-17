@@ -6,13 +6,13 @@ var http = require('http');
 var querystring = require('querystring');
 
 // constants to use with URL
-const hostname = 'campaign-treasurer-companion.appspot.com';
-const authorisationToken = process.env.CTCADMINTOKEN || 'someuser:somepassword';
+const hostname = process.env.CTC_UPDATER_HOST || 'localhost';
+const authorisationToken = process.env.CTC_ADMIN_TOKEN || 'someuser:somepassword';
 
 // paths to use URL(s) in HTTP requests
-const pathForNewsUpdate = '/masterpanel/addnews.php';
-const pathForPriceOf = '/masterpanel/getprice.php';
-const pathForPriceUpdate = '/masterpanel/updateprice.php';
+const pathForNewsUpdate = '/addnews';
+const pathForPriceOf = '/getprice';
+const pathForPriceUpdate = '/updateprice';
 
 var descriptor = {
     hostname: hostname,
